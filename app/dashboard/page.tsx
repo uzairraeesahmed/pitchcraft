@@ -27,35 +27,35 @@ export default function DashboardPage() {
       return;
     }
 
+    const fetchPitches = async () => {
+      if (!user?.id) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('pitches')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        setPitches(data || []);
+        setStats({
+          total_ideas: data?.length || 0,
+          total_pitches: data?.length || 0,
+          recent_pitches: data?.slice(0, 5) || []
+        });
+      } catch (error) {
+        console.error('Error fetching pitches:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (user) {
       fetchPitches();
     }
   }, [user, authLoading, router]);
-
-  const fetchPitches = async () => {
-    if (!user?.id) return;
-    
-    try {
-      const { data, error } = await supabase
-        .from('pitches')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-
-      setPitches(data || []);
-      setStats({
-        total_ideas: data?.length || 0,
-        total_pitches: data?.length || 0,
-        recent_pitches: data?.slice(0, 5) || []
-      });
-    } catch (error) {
-      console.error('Error fetching pitches:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDeletePitch = async (pitchId: string) => {
     if (!confirm('Are you sure you want to delete this pitch?')) return;
@@ -85,7 +85,7 @@ export default function DashboardPage() {
       } else {
         // Show loading state
         setGeneratingWebsite(pitch.id);
-        
+
         // Generate website if not stored
         const response = await fetch('/api/generate-website', {
           method: 'POST',
@@ -97,8 +97,9 @@ export default function DashboardPage() {
 
         if (response.ok) {
           const htmlContent = await response.text();
-          
+
           // Save the generated HTML to database for future use
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const { error: updateError } = await (supabase as any)
             .from('pitches')
             .update({ website_html: htmlContent })
@@ -107,7 +108,7 @@ export default function DashboardPage() {
           if (updateError) {
             console.error('Error saving website HTML:', updateError);
           }
-          
+
           const blob = new Blob([htmlContent], { type: 'text/html' });
           const url = URL.createObjectURL(blob);
           window.open(url, '_blank');
@@ -243,17 +244,16 @@ export default function DashboardPage() {
                     <h3 className="text-xl font-semibold text-gray-900">
                       {pitch.startup_name}
                     </h3>
-                    <p className="text-gray-600 italic">"{pitch.tagline}"</p>
+                    <p className="text-gray-600 italic">&quot;{pitch.tagline}&quot;</p>
                   </div>
                   <div className="flex space-x-2">
                     <button
                       onClick={() => handleViewWebsite(pitch)}
                       disabled={generatingWebsite === pitch.id}
-                      className={`p-2 ${
-                        generatingWebsite === pitch.id 
-                          ? 'text-gray-400 cursor-not-allowed' 
+                      className={`p-2 ${generatingWebsite === pitch.id
+                          ? 'text-gray-400 cursor-not-allowed'
                           : 'text-purple-600 hover:text-purple-800'
-                      }`}
+                        }`}
                       title={generatingWebsite === pitch.id ? "Generating website..." : "View Website"}
                     >
                       {generatingWebsite === pitch.id ? (

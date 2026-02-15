@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Pitch } from '@/lib/types';
 import { Brain, Download, Share2, ArrowLeft } from 'lucide-react';
-import { downloadAsPDF, downloadPitchAsPDF } from '@/lib/utils';
+
+import { downloadPitchAsPDF } from '@/lib/utils';
 import Link from 'next/link';
 
 interface SharePitchPageProps {
@@ -19,26 +20,26 @@ export default function SharePitchPage({ params }: SharePitchPageProps) {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    const fetchPitch = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('pitches')
+          .select('*')
+          .eq('id', params.id)
+          .single();
+
+        if (error) throw error;
+        setPitch(data);
+      } catch (error) {
+        console.error('Error fetching pitch:', error);
+        setError('Pitch not found');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchPitch();
   }, [params.id]);
-
-  const fetchPitch = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('pitches')
-        .select('*')
-        .eq('id', params.id)
-        .single();
-
-      if (error) throw error;
-      setPitch(data);
-    } catch (error) {
-      console.error('Error fetching pitch:', error);
-      setError('Pitch not found');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleExportPDF = async () => {
     if (!pitch) return;
@@ -82,7 +83,7 @@ export default function SharePitchPage({ params }: SharePitchPageProps) {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Pitch Not Found</h1>
-          <p className="text-gray-600 mb-4">The pitch you're looking for doesn't exist or has been removed.</p>
+          <p className="text-gray-600 mb-4">The pitch you&apos;re looking for doesn&apos;t exist or has been removed.</p>
           <Link
             href="/"
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
@@ -123,7 +124,7 @@ export default function SharePitchPage({ params }: SharePitchPageProps) {
               {pitch.startup_name}
             </h1>
             <p className="text-xl text-gray-600 italic mb-6">
-              "{pitch.tagline}"
+              &quot;{pitch.tagline}&quot;
             </p>
             <div className="flex justify-center space-x-4">
               <button

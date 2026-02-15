@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth-provider';
 import { supabase } from '@/lib/supabase';
 import { generatePitch } from '@/lib/gemini';
-import { Pitch, IdeaFormData, GeminiResponse } from '@/lib/types';
-import { Brain, Save, RefreshCw, Download, Share2, ArrowLeft, Copy } from 'lucide-react';
-import { copyToClipboard, downloadAsPDF, downloadPitchAsPDF, generateShareableLink } from '@/lib/utils';
+import { Pitch, IdeaFormData, GeminiResponse, Idea } from '@/lib/types';
+import { Brain, Save, RefreshCw, Download, Share2, ArrowLeft } from 'lucide-react';
+import { copyToClipboard, downloadPitchAsPDF, generateShareableLink } from '@/lib/utils';
 
 interface EditPitchPageProps {
   params: Promise<{
@@ -31,37 +31,38 @@ export default function EditPitchPage({ params }: EditPitchPageProps) {
       return;
     }
 
+    const fetchPitch = async () => {
+      if (!user?.id) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('pitches')
+          .select('*')
+          .eq('id', resolvedParams.id)
+          .eq('user_id', user.id)
+          .single();
+
+        if (error) throw error;
+        setPitch(data);
+      } catch (error) {
+        console.error('Error fetching pitch:', error);
+        setError('Pitch not found');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (user) {
       fetchPitch();
     }
   }, [user, authLoading, router, resolvedParams.id]);
-
-  const fetchPitch = async () => {
-    if (!user?.id) return;
-    
-    try {
-      const { data, error } = await supabase
-        .from('pitches')
-        .select('*')
-        .eq('id', resolvedParams.id)
-        .eq('user_id', user.id)
-        .single();
-
-      if (error) throw error;
-      setPitch(data);
-    } catch (error) {
-      console.error('Error fetching pitch:', error);
-      setError('Pitch not found');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSave = async () => {
     if (!pitch) return;
 
     setSaving(true);
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await (supabase as any)
         .from('pitches')
         .update({
@@ -101,11 +102,11 @@ export default function EditPitchPage({ params }: EditPitchPageProps) {
       if (ideaError) throw ideaError;
 
       const ideaFormData: IdeaFormData = {
-        idea_name: (ideaData as any).idea_name,
-        description: (ideaData as any).description,
-        industry: (ideaData as any).industry,
-        tone: (ideaData as any).tone,
-        language: (ideaData as any).language
+        idea_name: (ideaData as Idea).idea_name,
+        description: (ideaData as Idea).description,
+        industry: (ideaData as Idea).industry,
+        tone: (ideaData as Idea).tone,
+        language: (ideaData as Idea).language
       };
 
       const aiResponse: GeminiResponse = await generatePitch(ideaFormData);
@@ -166,7 +167,7 @@ export default function EditPitchPage({ params }: EditPitchPageProps) {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Pitch Not Found</h1>
-          <p className="text-gray-600 mb-4">The pitch you're looking for doesn't exist or you don't have access to it.</p>
+          <p className="text-gray-600 mb-4">The pitch you&apos;re looking for doesn&apos;t exist or you don&apos;t have access to it.</p>
           <button
             onClick={() => router.push('/dashboard')}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"

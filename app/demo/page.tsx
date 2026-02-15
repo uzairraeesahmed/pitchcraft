@@ -65,27 +65,25 @@ export default function DemoPage() {
           <p className="text-xl text-gray-600 mb-8">
             Watch how AI transforms a simple idea into a professional startup pitch
           </p>
-          
+
           <div className="flex justify-center mb-8">
             <div className="bg-gray-100 rounded-lg p-1 flex">
               <button
                 onClick={() => setSelectedLanguage('en')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
-                  selectedLanguage === 'en'
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${selectedLanguage === 'en'
                     ? 'bg-white text-gray-900 shadow-sm'
                     : 'text-gray-600 hover:text-gray-900'
-                }`}
+                  }`}
               >
                 <Globe className="h-4 w-4 mr-2" />
                 English
               </button>
               <button
                 onClick={() => setSelectedLanguage('ur')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
-                  selectedLanguage === 'ur'
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${selectedLanguage === 'ur'
                     ? 'bg-white text-gray-900 shadow-sm'
                     : 'text-gray-600 hover:text-gray-900'
-                }`}
+                  }`}
               >
                 <Globe className="h-4 w-4 mr-2" />
                 Roman Urdu
@@ -100,7 +98,7 @@ export default function DemoPage() {
               <Sparkles className="h-6 w-6 text-blue-600 mr-3" />
               {selectedLanguage === 'ur' ? 'Input - Idea' : 'Your Input'}
             </h2>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -110,21 +108,21 @@ export default function DemoPage() {
                   <span className="text-gray-600">Mentorship Platform for Students</span>
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {selectedLanguage === 'ur' ? 'تفصیل' : 'Description'}
                 </label>
                 <div className="bg-gray-50 p-3 rounded-md">
                   <span className="text-gray-600">
-                    {selectedLanguage === 'ur' 
+                    {selectedLanguage === 'ur'
                       ? 'Students ko mentors se connect karne wala platform jo career guidance provide karta hai'
                       : 'A platform that connects students with mentors for career guidance and professional development'
                     }
                   </span>
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {selectedLanguage === 'ur' ? 'صنعت' : 'Industry'}
@@ -133,7 +131,7 @@ export default function DemoPage() {
                   <span className="text-gray-600">Education Technology</span>
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {selectedLanguage === 'ur' ? 'ٹون' : 'Tone'}
@@ -152,13 +150,13 @@ export default function DemoPage() {
               <Brain className="h-6 w-6 text-purple-600 mr-3" />
               {selectedLanguage === 'ur' ? 'AI Output - Pitch' : 'AI Generated Output'}
             </h2>
-            
+
             <div className="space-y-6">
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg">
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                   {currentPitch.startup_name}
                 </h3>
-                <p className="text-gray-600 italic">"{currentPitch.tagline}"</p>
+                <p className="text-gray-600 italic">&quot;{currentPitch.tagline}&quot;</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
@@ -204,7 +202,7 @@ export default function DemoPage() {
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
             {selectedLanguage === 'ur' ? 'کیوں PitchCraft استعمال کریں؟' : 'Why Choose PitchCraft?'}
           </h2>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-6">
               <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -214,13 +212,13 @@ export default function DemoPage() {
                 {selectedLanguage === 'ur' ? 'AI-Powered' : 'AI-Powered Generation'}
               </h3>
               <p className="text-gray-600">
-                {selectedLanguage === 'ur' 
+                {selectedLanguage === 'ur'
                   ? 'Advanced AI professional content generate karta hai'
                   : 'Advanced AI creates professional startup content'
                 }
               </p>
             </div>
-            
+
             <div className="text-center p-6">
               <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="h-8 w-8 text-green-600" />
@@ -229,13 +227,13 @@ export default function DemoPage() {
                 {selectedLanguage === 'ur' ? 'Bilingual Support' : 'Bilingual Support'}
               </h3>
               <p className="text-gray-600">
-                {selectedLanguage === 'ur' 
+                {selectedLanguage === 'ur'
                   ? 'English aur Roman Urdu dono languages mein content'
                   : 'Generate content in English and Roman Urdu'
                 }
               </p>
             </div>
-            
+
             <div className="text-center p-6">
               <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Sparkles className="h-8 w-8 text-purple-600" />
@@ -244,7 +242,7 @@ export default function DemoPage() {
                 {selectedLanguage === 'ur' ? 'Export & Share' : 'Export & Share'}
               </h3>
               <p className="text-gray-600">
-                {selectedLanguage === 'ur' 
+                {selectedLanguage === 'ur'
                   ? 'PDF export aur shareable links'
                   : 'Export to PDF and create shareable links'
                 }
@@ -259,7 +257,7 @@ export default function DemoPage() {
               {selectedLanguage === 'ur' ? 'ابھی شروع کریں!' : 'Ready to Get Started?'}
             </h2>
             <p className="text-xl text-blue-100 mb-8">
-              {selectedLanguage === 'ur' 
+              {selectedLanguage === 'ur'
                 ? 'اپنے ideas کو professional pitches میں تبدیل کریں'
                 : 'Transform your ideas into professional pitches'
               }

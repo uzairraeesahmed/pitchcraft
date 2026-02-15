@@ -30,7 +30,8 @@ export default function LoginPage() {
       } else {
         router.push('/dashboard');
       }
-    } catch {
+    } catch (error) {
+      console.error('Login error:', error);
       setError('An unexpected error occurred');
     } finally {
       setLoading(false);
@@ -127,6 +128,7 @@ export default function LoginPage() {
               >
                 Sign up here
               </Link>
+
             </p>
           </div>
         </form>

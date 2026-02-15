@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth-provider';
 import { supabase } from '@/lib/supabase';
 import { generatePitch } from '@/lib/gemini';
-import { IdeaFormData, GeminiResponse } from '@/lib/types';
+import { IdeaFormData, GeminiResponse, Idea, Pitch } from '@/lib/types';
 import { Brain, ArrowLeft, Sparkles, Globe, Link } from 'lucide-react';
 
 export default function CreatePitchPage() {
@@ -44,6 +44,7 @@ export default function CreatePitchPage() {
           industry: formData.industry,
           tone: formData.tone,
           language: formData.language
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any)
         .select()
         .single();
@@ -54,7 +55,7 @@ export default function CreatePitchPage() {
         .from('pitches')
         .insert({
           user_id: user!.id,
-          idea_id: (ideaData as any).id,
+          idea_id: (ideaData as Idea).id,
           startup_name: aiResponse.startup_name,
           tagline: aiResponse.tagline,
           pitch: aiResponse.pitch,
@@ -65,6 +66,7 @@ export default function CreatePitchPage() {
           color_palette: aiResponse.color_palette || null,
           logo_concept: aiResponse.logo_concept || null,
           language: formData.language
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any)
         .select()
         .single();
@@ -76,25 +78,26 @@ export default function CreatePitchPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ pitchId: (pitchData as any).id }),
+        body: JSON.stringify({ pitchId: (pitchData as Pitch).id }),
       });
 
       if (response.ok) {
         const htmlContent = await response.text();
-        
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { error: updateError } = await (supabase as any)
           .from('pitches')
           .update({ website_html: htmlContent })
-          .eq('id', (pitchData as any).id);
+          .eq('id', (pitchData as Pitch).id);
 
         if (updateError) {
           console.error('Error saving website HTML:', updateError);
         }
-        
+
         const blob = new Blob([htmlContent], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         window.open(url, '_blank');
-        
+
         setTimeout(() => {
           router.push('/dashboard');
         }, 1000);
@@ -154,7 +157,7 @@ export default function CreatePitchPage() {
               Create Your Startup Pitch
             </h1>
             <p className="text-gray-600">
-              Tell us about your idea and we'll generate a professional pitch for you
+              Tell us about your idea and we&apos;ll generate a professional pitch for you
             </p>
           </div>
 

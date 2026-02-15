@@ -44,7 +44,8 @@ export default function RegisterPage() {
       } else {
         router.push('/dashboard');
       }
-    } catch {
+    } catch (error) {
+      console.error('Registration error:', error);
       setError('An unexpected error occurred');
     } finally {
       setLoading(false);
